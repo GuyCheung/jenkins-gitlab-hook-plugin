@@ -1,9 +1,23 @@
 require 'jruby/core_ext'
 require 'jenkins/rack'
 
+module Jenkins
+  module Model
+    class UnprotectedRootAction
+      include Jenkins::Model::Action
+    end
+
+    class UnprotectedRootActionProxy
+      include ActionProxy
+      include Java.hudson.model.UnprotectedRootAction
+      proxy_for Jenkins::Model::UnprotectedRootAction
+    end
+  end
+end
+
 java_import Java.java.util.logging.Logger
 
-class GitlabWebHookRootAction < Jenkins::Model::RootAction
+class GitlabWebHookRootAction < Jenkins::Model::UnprotectedRootAction
   include Jenkins::Model::DescribableNative
   include Jenkins::RackSupport
 

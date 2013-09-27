@@ -1,0 +1,14 @@
+<%
+   f = taglib("/lib/form")
+   f.block do
+%>
+  <table>
+      <%
+         f.entry :title => 'Rotten egg project param', :field => :conf_param, :description => 'Enter if you dare :-)' do
+           f.textbox :clazz => 'required'
+         end
+      %>
+  </table>
+<%
+   end
+%>

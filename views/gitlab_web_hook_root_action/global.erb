@@ -1,11 +1,10 @@
 <%
-#l = taglib("/lib/layout")
-#t = taglib("/lib/hudson")
-f = taglib("/lib/form")
-f.section(:title => "Gitlab Web Hook 2") do
-  #f.entry(:title => "param2", :field => "conf_param", :description => "description", :help => "help_file_name") do
-  f.entry(:title => "param2", :field => "conf_param", :description => "description") do
-    f.textbox
-  end
-end
+   f = taglib("/lib/form")
+
+   f.section(:title => "Gitlab Rotten Web Hook Configuration") do
+     #f.entry :title => 'Rotten egg global param', :field => :conf_param, :description => 'Enter if you dare :-)' do
+     f.entry :title => 'Rotten egg global param', :field => :conf_param, :description => 'Enter if you dare :-), :help => "help"' do
+       f.textbox :clazz => 'required'
+     end
+   end
 %>

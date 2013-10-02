@@ -5,3 +5,5 @@ work
 # exclude Idea files
 .idea
 *.iml
+
+*.log

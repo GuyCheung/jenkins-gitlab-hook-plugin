@@ -1,12 +1,15 @@
-require 'jruby/core_ext'
 require 'jenkins/rack'
 
-require_relative 'unprotected_root_action'
 require_relative 'api'
+require_relative 'unprotected_root_action'
+require_relative 'gitlab_web_hook_root_action_descriptor'
+
+include Java
 
 java_import Java.java.util.logging.Logger
 
 class GitlabWebHookRootAction < Jenkins::Model::UnprotectedRootAction
+  include Jenkins::Model
   include Jenkins::Model::DescribableNative
   include Jenkins::RackSupport
 
@@ -16,37 +19,17 @@ class GitlabWebHookRootAction < Jenkins::Model::UnprotectedRootAction
   icon nil # we don't need the link in the main navigation
   url_path "gitlab"
 
-  attr_reader :conf_param
-
-  #def initialize(attributes = {})
-  #  LOGGER.info "=========== GitlabWebHookRootAction INIT ==================="
-  #  LOGGER.info attributes.inspect
-  #
-  #  attributes.each do |k, v|
-  #    instance_variable_set "@#{k}", v
-  #  end
-  #end
+  attr_accessor :conf_param
 
   def call(env)
     LOGGER.info "=========== GitlabWebHookRootAction ENV ==================="
+    LOGGER.info conf_param
+    LOGGER.info getDescriptor.inspect
     LOGGER.info env.inspect
     GitlabWebHook::Api.new.call(env)
   end
 
-  #java_signature 'boolean configure(StaplerRequest, JSONObject) rotten'
-  #def configure(req, json)
-  #  LOGGER.info "11 rotten =================================="
-  #  LOGGER.info req.inspect
-  #  LOGGER.info json.inspect
-  #  LOGGER.info "12 rotten =================================="
-  #  req.bindJSON(this, json)
-  #  LOGGER.info "13 rotten =================================="
-  #  save
-  #  LOGGER.info "14 rotten =================================="
-  #  true
-  #end
+  describe_as Java.hudson.model.Descriptor, :with => GitlabWebHookRootActionDescriptor
 end
-
-#GitlabWebHookRootAction.add_method_annotation("configure", java.lang.Override => {})
 
 Jenkins::Plugin.instance.register_extension(GitlabWebHookRootAction)

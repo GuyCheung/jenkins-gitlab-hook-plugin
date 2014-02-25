@@ -14,6 +14,8 @@ java_import Java.java.util.logging.Level
 
 module GitlabWebHook
   class Api < Sinatra::Base
+    LOGGER = Logger.getLogger(Api.class.name)
+
     get '/ping' do
       'Gitlab Web Hook is up and running :-)'
     end
@@ -35,31 +37,27 @@ module GitlabWebHook
     def process_projects(action)
       details = parse_request
       messages = details.is_delete_branch_commit? ? ProcessDeleteCommit.new.with(details) : ProcessCommit.new.with(details, action)
-      logger.info(messages.join("\n"))
+      LOGGER.info(messages.join("\n"))
       messages.join("<br/>")
     rescue BadRequestException => e
-      logger.warning(e.message)
+      LOGGER.warning(e.message)
       status 400
       e.message
     rescue NotFoundException => e
-      logger.warning(e.message)
+      LOGGER.warning(e.message)
       status 404
       e.message
     rescue => e
-      logger.log(Level::SEVERE, e.message, e)
+      LOGGER.log(Level::SEVERE, e.message, e)
       status 500
       e.message
     end
 
     def parse_request
       details = ParseRequest.new.from(params, request)
-      logger.info("gitlab web hook triggered for repo url #{details.repository_url} and #{details.branch} branch")
-      logger.info("with payload: #{details.payload}")
+      LOGGER.info("gitlab web hook triggered for repo url #{details.repository_url} and #{details.branch} branch")
+      LOGGER.info("with payload: #{details.payload}")
       details
-    end
-
-    def logger
-      @logger || Logger.getLogger(self.class.name)
     end
   end
 end

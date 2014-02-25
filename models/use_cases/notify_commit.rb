@@ -1,10 +1,11 @@
 require_relative '../values/settings'
 require_relative '../services/get_jenkins_projects'
 
+include Java
+java_import Java.java.util.logging.Logger
+
 module GitlabWebHook
   class NotifyCommit
-    LOGGER = Logger.getLogger(NotifyCommit.class.name)
-
     attr_reader :project
 
     def initialize(project, logger = nil)
@@ -29,7 +30,7 @@ module GitlabWebHook
     private
 
     def logger
-      @logger || LOGGER
+      @logger || Logger.getLogger(self.class.name)
     end
   end
 end

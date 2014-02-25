@@ -3,10 +3,11 @@ require_relative '../services/get_jenkins_projects'
 require_relative '../services/get_build_cause'
 require_relative '../services/get_build_actions'
 
+include Java
+java_import Java.java.util.logging.Logger
+
 module GitlabWebHook
   class BuildNow
-    LOGGER = Logger.getLogger(self.class.name)
-
     attr_reader :project
 
     def initialize(project, logger = nil)
@@ -36,7 +37,7 @@ module GitlabWebHook
     end
 
     def logger
-      @logger || LOGGER
+      @logger || Logger.getLogger(self.class.name)
     end
   end
 end

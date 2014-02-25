@@ -25,8 +25,6 @@ module GitlabWebHook
 
     attr_reader :jenkins_project
 
-    LOGGER = Logger.getLogger(Project.class.name)
-
     def initialize(jenkins_project, logger = nil)
       raise ArgumentError.new("jenkins project is required") unless jenkins_project
       @jenkins_project = jenkins_project
@@ -89,7 +87,7 @@ module GitlabWebHook
     end
 
     def logger
-      @logger || LOGGER
+      @logger || Logger.getLogger(self.class.name)
     end
   end
 end
